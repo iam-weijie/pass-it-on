@@ -1,38 +1,49 @@
-import fs from "fs/promises";
-import { NextResponse } from "next/server";
-import path from "path";
-
-const dataFile = path.join(process.cwd(), "data.json");
+import { supabase } from "../../../lib/supabaseClient";
 
 export async function POST(req) {
-  const body = await req.json();
-  const newSentence = body.sentence?.trim();
-
-  if (!newSentence) {
-    return NextResponse.json({ error: "Empty sentence" }, { status: 400 });
-  }
-
-  let data = {
-    lastSentence: "You're the first one!",
-    count: 0,
-  };
-
   try {
-    const file = await fs.readFile(dataFile, "utf8");
-    data = JSON.parse(file);
-  } catch (e) {
-    console.log("Starting fresh data.json");
+    const { sentence } = await req.json();
+
+    // Insert new sentence
+    const { data: insertData, error: insertError } = await supabase
+      .from("sentences")
+      .insert({ sentence })
+      .select("id")
+      .single();
+
+    if (insertError) throw insertError;
+
+    // Fetch the previous sentence (the one with id just less than current)
+    const { data: previousData, error: previousError } = await supabase
+      .from("sentences")
+      .select("sentence")
+      .lt("id", insertData.id)
+      .order("id", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (previousError && previousError.code !== "PGRST116") throw previousError;
+    // PGRST116 = no rows found, which is fine for first sentence
+
+    // Fetch total count
+    const { count, error: countError } = await supabase
+      .from("sentences")
+      .select("*", { count: "exact", head: true });
+
+    if (countError) throw countError;
+
+    return new Response(
+      JSON.stringify({
+        previousSentence: previousData?.sentence ?? "You're the first one!",
+        count,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Supabase error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-
-  const response = {
-    previousSentence: data.lastSentence,
-    count: data.count + 1,
-  };
-
-  data.lastSentence = newSentence;
-  data.count += 1;
-
-  await fs.writeFile(dataFile, JSON.stringify(data), "utf8");
-
-  return NextResponse.json(response);
 }

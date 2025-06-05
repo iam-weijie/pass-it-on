@@ -60,6 +60,25 @@ export default function Home() {
           </button>
         </div>
       )}
+
+      {/* Floating emoji hints */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <span className="floating-emoji" style={{ top: "10%", left: "5%" }}>
+          💬
+        </span>
+        <span className="floating-emoji" style={{ top: "30%", right: "8%" }}>
+          ✍️
+        </span>
+        <span className="floating-emoji" style={{ bottom: "15%", left: "12%" }}>
+          🧠
+        </span>
+        <span
+          className="floating-emoji"
+          style={{ bottom: "10%", right: "15%" }}
+        >
+          📨
+        </span>
+      </div>
     </main>
   );
 }

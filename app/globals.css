@@ -3,31 +3,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light/Dark theme variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #fffaf3;
+  --foreground: #1a1a1a;
+  --accent: #ea580c; /* warm orange */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #f5f5f5;
+    --accent: #fb923c;
   }
 }
 
+/* Optional: Tailwind theme extension */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans, sans-serif);
+  --font-mono: var(--font-geist-mono, monospace);
+}
+
+/* Base body styling */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* Fade-in animation utility */
 @layer utilities {
   .animate-fadeIn {
     animation: fadeIn 0.4s ease-out both;

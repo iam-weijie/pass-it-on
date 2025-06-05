@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "PassItOn",
-  description: "Send and receive anonymous thoughts",
+  description: "Pass a note to the next person",
 };
 
 export default function RootLayout({ children }) {

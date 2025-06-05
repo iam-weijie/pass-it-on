@@ -30,18 +30,26 @@ export default function Home() {
 
       {!submitted && (
         <>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type something meaningful, funny, random..."
-            className="w-full max-w-xl text-lg px-6 py-4 rounded-full bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder-zinc-400"
-          />
-          <button
-            onClick={handleSubmit}
-            className="mt-4 text-orange-600 hover:text-orange-800 transition font-medium"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+            className="w-full max-w-xl flex flex-col items-center"
           >
-            ↵ Press Enter or click to send
-          </button>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type something..."
+              className="w-full text-lg px-6 py-4 rounded-full bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder-zinc-400"
+            />
+            <button
+              type="submit"
+              className="mt-4 text-orange-600 hover:text-orange-800 transition font-medium"
+            >
+              ↵ Press Enter or click to send
+            </button>
+          </form>
         </>
       )}
 

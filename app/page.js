@@ -24,12 +24,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-orange-100 to-yellow-50 flex flex-col items-center justify-center px-4 text-zinc-800 font-sans">
-      <p className="text-sm sm:text-base text-zinc-600 mb-6 tracking-wide">
-        Send a sentence. Receive the one sent before you.
-      </p>
-
       {!submitted && (
         <>
+          <p className="text-sm sm:text-base text-zinc-600 mb-6 tracking-wide">
+            Send a sentence. Receive the one sent before you.
+          </p>
           <form
             onSubmit={(e) => {
               e.preventDefault();

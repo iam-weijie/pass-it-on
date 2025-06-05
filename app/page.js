@@ -5,6 +5,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [previous, setPrevious] = useState("");
   const [count, setCount] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit() {
     if (!input.trim()) return;
@@ -18,45 +19,45 @@ export default function Home() {
     setPrevious(data.previousSentence);
     setCount(data.count);
     setInput("");
+    setSubmitted(true);
   }
 
   return (
-    <main
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        margin: "auto",
-        textAlign: "center",
-      }}
-    >
-      <h1>PassItOn 🔁</h1>
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Type your sentence..."
-        style={{ width: "100%", padding: "0.5rem", marginTop: "1rem" }}
-      />
-      <button
-        onClick={handleSubmit}
-        style={{
-          marginTop: "1rem",
-          padding: "0.5rem 1rem",
-          background: "#0070f3",
-          color: "white",
-          border: "none",
-        }}
-      >
-        Submit
-      </button>
+    <main className="min-h-screen bg-gradient-to-br from-orange-100 to-yellow-50 flex flex-col items-center justify-center px-4 text-zinc-800 font-sans">
+      <p className="text-sm sm:text-base text-zinc-600 mb-6 tracking-wide">
+        Send a sentence. Receive the one sent before you.
+      </p>
 
-      {previous && (
-        <div style={{ marginTop: "2rem" }}>
-          <p>
-            <strong>Previous person said:</strong> {previous}
+      {!submitted && (
+        <>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type something meaningful, funny, random..."
+            className="w-full max-w-xl text-lg px-6 py-4 rounded-full bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder-zinc-400"
+          />
+          <button
+            onClick={handleSubmit}
+            className="mt-4 text-orange-600 hover:text-orange-800 transition font-medium"
+          >
+            ↵ Press Enter or click to send
+          </button>
+        </>
+      )}
+
+      {submitted && (
+        <div className="mt-10 text-center animate-fadeIn space-y-3">
+          <p className="text-zinc-500 text-sm">Previous person said:</p>
+          <p className="text-xl italic text-orange-800">“{previous}”</p>
+          <p className="text-sm text-zinc-400">
+            You are the <strong>{count}th</strong> participant
           </p>
-          <p>
-            You are the <strong>{count}th</strong> person to participate.
-          </p>
+          <button
+            onClick={() => setSubmitted(false)}
+            className="mt-4 text-orange-600 hover:text-orange-800 transition underline text-sm"
+          >
+            Send another?
+          </button>
         </div>
       )}
     </main>

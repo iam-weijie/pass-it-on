@@ -6,20 +6,27 @@ export default function Home() {
   const [previous, setPrevious] = useState("");
   const [count, setCount] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit() {
     if (!input.trim()) return;
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sentence: input }),
-    });
+    setLoading(true);
 
-    const data = await res.json();
-    setPrevious(data.previousSentence);
-    setCount(data.count);
-    setInput("");
-    setSubmitted(true);
+    try {
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sentence: input }),
+      });
+
+      const data = await res.json();
+      setPrevious(data.previousSentence);
+      setCount(data.count);
+      setInput("");
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -44,6 +51,7 @@ export default function Home() {
             />
             <button
               type="submit"
+              disabled={loading}
               className="mt-4 text-orange-600 hover:text-orange-800 transition font-medium"
             >
               ↵ Press Enter or click to send
